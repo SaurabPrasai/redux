@@ -1,78 +1,66 @@
-
 const redux=require("redux")
 
+const createStore=redux.createStore
 
-const createStore=redux.createStore;
-const bindActionCreator=redux.bindActionCreators
+const CAKE_ORDERED="CAKE_ORDERED"
 
-const decrement=()=>{
-    return{
-        type:"SUB",
-        payload:4
-    }
+const ICE_CREAM="ICE_CREAM"
+
+const combineReducers=redux.combineReducers
+
+
+
+// (previousState,action)=>newState
+
+const initialCakeState={
+    numberOfCakes:10,
 }
 
-const reStock=()=>{
-    return{
-        type:"READD",
-        payload:5
-    }
+const initialIceCreamState={
+    numberOfIceCream:20,
 }
 
-const initialState={
-    count:10
-}
+function cakeReducer(state=initialCakeState,action){
 
-const reducer=(state=initialState,action)=>{
     switch(action.type){
-        case "ADD":
-            return{
-                ...state,count:state.count+action.payload
+        case CAKE_ORDERED:
+            return {
+                ...state,
+                numberOfCakes:state.numberOfCakes-action.payload
             }
-        case "SUB":
-            return{
-                ...state,count:state.count-action.payload
-            }
-
-         case "READD":
-            return{
-                ...state,count:state.count+action.payload
-            }   
-        default:
-            return state    
+        default:{
+            return state;
+        }   
     }
 }
 
-const store=createStore(reducer);
+function iceCreamReducer(state=initialIceCreamState,action){
+    switch (action.type) {
+        case ICE_CREAM:
+            return{
+                ...state,numberOfIceCream:state.numberOfIceCream-action.payload
+            }
+            
+    
+        default:
+            return state
+    }
+}
 
-// console.log(store.getState());
+const rootReducer=combineReducers({
+    cake:cakeReducer,
+    iceCream:iceCreamReducer
+})
 
-// store.dispatch({type:"-",payload:6})
+const store=createStore(rootReducer)
 
-// console.log(store.getState());
+console.log("initial State",store.getState());
 
-// store.dispatch({type:"-",payload:2})
+store.dispatch({type:CAKE_ORDERED,payload:5})
 
-// console.log(store.getState());
+console.log("initial State",store.getState());
 
-// store.dispatch({type:"=",payload:6})
+store.dispatch({type:ICE_CREAM,payload:3})
 
-// console.log(store.getState());
-
-const actions=bindActionCreator({decrement,reStock},store.dispatch)
-
-actions.decrement();
-
-console.log(store.getState());
-
-actions.reStock();
-
-console.log(store.getState());
-
-
-
-
-
-
-
+console.log("Initial State",store.getState())
 
