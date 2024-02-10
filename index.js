@@ -1,47 +1,73 @@
+
 const redux=require("redux")
 
-const createStore=redux.createStore
 
-const CAKE_ORDERED="CAKE_ORDERED"
+const createStore=redux.createStore;
+const bindActionCreator=redux.bindActionCreators
 
-
-
-
-// (previousState,action)=>newState
-
-const initialState={
-    numberOfCakes:10
-}
-
-function reducer(state=initialState,action){
-
-    switch(action.type){
-        case CAKE_ORDERED:
-            return {
-                ...state,
-                numberOfCakes:state.numberOfCakes-action.payload
-            }
-        default:{
-            return state;
-        }   
+const decrement=()=>{
+    return{
+        type:"SUB",
+        payload:4
     }
 }
 
-const store=createStore(reducer)
+const reStock=()=>{
+    return{
+        type:"READD",
+        payload:5
+    }
+}
 
-console.log("initial State",store.getState());
+const initialState={
+    count:10
+}
 
-store.dispatch({type:CAKE_ORDERED,payload:5})
+const reducer=(state=initialState,action)=>{
+    switch(action.type){
+        case "ADD":
+            return{
+                ...state,count:state.count+action.payload
+            }
+        case "SUB":
+            return{
+                ...state,count:state.count-action.payload
+            }
 
-console.log("initial State",store.getState());
+         case "READD":
+            return{
+                ...state,count:state.count+action.payload
+            }   
+        default:
+            return state    
+    }
+}
 
-store.dispatch({type:CAKE_ORDERED,payload:10})
+const store=createStore(reducer);
 
-console.log("initial State",store.getState());
+// console.log(store.getState());
 
+// store.dispatch({type:"-",payload:6})
 
+// console.log(store.getState());
 
+// store.dispatch({type:"-",payload:2})
 
+// console.log(store.getState());
+
+// store.dispatch({type:"=",payload:6})
+
+// console.log(store.getState());
+
+const actions=bindActionCreator({decrement,reStock},store.dispatch)
+
+actions.decrement();
+
+console.log(store.getState());
+
+actions.reStock();
+
+console.log(store.getState());
 
 
 
